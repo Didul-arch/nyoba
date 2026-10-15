@@ -1,5 +1,5 @@
 import { execFileSync } from 'node:child_process';
-import { mkdtempSync, writeFileSync } from 'node:fs';
+import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
@@ -25,5 +25,28 @@ describe('git', () => {
 		expect(log(root)).toBe('kolokium/01-bab-1, tracker/01-progress|nyoba');
 		await git.flush();
 		expect(log(root).split('\n')).toHaveLength(1);
+	});
+
+	it('vault di dalam repo lain: .git hilang nggak bikin commit nyasar ke repo induk', async () => {
+		const parent = mkdtempSync(join(tmpdir(), 'nyoba-induk-'));
+		execFileSync('git', ['init', '-q', parent]);
+		const root = join(parent, 'vault');
+		mkdirSync(root);
+		const git = createGit(root);
+		await git.ensureRepo();
+		rmSync(join(root, '.git'), { recursive: true });
+
+		writeFileSync(join(root, 'a.md'), 'a');
+		writeFileSync(join(parent, 'punya-induk.txt'), 'jangan disentuh');
+		git.schedule('docs/a.md');
+		await git.flush();
+
+		expect(log(root)).toBe('a|nyoba');
+		const parentStatus = execFileSync('git', ['status', '--porcelain'], {
+			cwd: parent,
+			encoding: 'utf8'
+		});
+		expect(parentStatus).toContain('?? punya-induk.txt');
+		expect(() => execFileSync('git', ['log'], { cwd: parent, stdio: 'pipe' })).toThrow();
 	});
 });

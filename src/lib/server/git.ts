@@ -17,13 +17,22 @@ export function createGit(root: string) {
 	let queue: Promise<void> = Promise.resolve();
 	let disabled = false;
 
-	const git = (...args: string[]) => exec('git', args, { cwd: root });
+	// --git-dir eksplisit: kalau .git vault hilang, git error, bukan naik
+	// ke folder induk dan diam-diam commit ke repo lain.
+	const gitDir = join(root, '.git');
+	const git = (...args: string[]) =>
+		exec('git', [`--git-dir=${gitDir}`, `--work-tree=${root}`, ...args], { cwd: root });
+
+	async function init(): Promise<void> {
+		if (existsSync(gitDir)) return;
+		await exec('git', ['init', '-q', '-b', 'main', root]);
+		await git('config', 'user.name', 'nyoba');
+		await git('config', 'user.email', 'nyoba@localhost');
+	}
 
 	async function ensureRepo(): Promise<void> {
 		try {
-			if (!existsSync(join(root, '.git'))) await git('init', '-q', '-b', 'main');
-			await git('config', 'user.name', 'nyoba');
-			await git('config', 'user.email', 'nyoba@localhost');
+			await init();
 		} catch (err) {
 			disabled = true;
 			console.warn('[nyoba] git nggak bisa dipakai, riwayat versi mati:', err);
@@ -44,6 +53,7 @@ export function createGit(root: string) {
 		pending.clear();
 		queue = queue.then(async () => {
 			try {
+				await init();
 				await git('add', '-A');
 				const { stdout } = await git('status', '--porcelain');
 				if (stdout.trim()) await git('commit', '-q', '-m', msg);

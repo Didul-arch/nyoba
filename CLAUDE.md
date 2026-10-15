@@ -44,6 +44,8 @@ Semua harus hijau. CI (`.github/workflows/ci.yml`) ngejalanin hal yang sama.
 - Env server dibaca dari `process.env` (`src/lib/server/config.ts`), diisi `node --env-file`. Jangan pakai `$env/*`: Vite ngerusak `$` di hash argon2.
 - adapter-node v6 nggak baca `ORIGIN`; build produksi di HTTP polos bakal kena 403 CSRF. Lokal pakai `npm run dev`.
 - `$effect` yang manggil `editor.view.dispatch` harus dibungkus `untrack()`, kalau nggak: loop `effect_update_depth_exceeded`.
+- Hash argon2 di `.env` wajib kutip tunggal (`'$argon2id$...'`): Docker Compose juga ngembangin `$`. `node --env-file` ngebuang kutipnya.
+- Perintah git ke vault selalu pakai `--git-dir`/`--work-tree` eksplisit (`src/lib/server/git.ts`), biar nggak nyasar commit ke repo induk.
 - Input rule Tiptap buat node chip: pakai `InputRule` sendiri yang ganti seluruh match; `nodeInputRule` ninggalin kurung.
 
 ## Bahasa

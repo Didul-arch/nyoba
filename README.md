@@ -23,6 +23,7 @@ Naskah final tetap di Word (ya gimana, kampus). nyoba cuma tempat mikir & nulis 
 | [`docs/spek.md`](docs/spek.md)                                 | Spesifikasi hasil kurasi (versi yang dipegang) |
 | [`docs/erd.md`](docs/erd.md)                                   | ERD + penjelasan tiap tabel                    |
 | [`docs/roadmap.md`](docs/roadmap.md)                           | Milestone M0–M7 dalam bentuk checklist         |
+| [`docs/deploy.md`](docs/deploy.md)                             | Cara deploy ke VPS (Docker + Caddy)            |
 | [`docs/spek-asli.md`](docs/spek-asli.md)                       | Spek mentah awal, buat arsip                   |
 | [`src/lib/server/db/schema.sql`](src/lib/server/db/schema.sql) | Skema SQLite yang siap dipakai                 |
 
@@ -39,7 +40,7 @@ npm run dev             # buka http://localhost:5173
 
 Isi `SESSION_SECRET` pakai string acak, misal `openssl rand -base64 48`.
 
-> Di laptop pakai `npm run dev`. Build produksi (`npm run build && npm start`) dimaksudkan jalan di belakang Caddy (HTTPS) — lihat M3 di roadmap.
+> Di laptop pakai `npm run dev`. Buat dipakai dari HP, deploy ke VPS: `docker compose up -d --build` — langkah lengkapnya di [`docs/deploy.md`](docs/deploy.md).
 
 Semua tulisanmu ada di `vault/` (file `.md` biasa + repo Git); database kecil di `.data/app.db`. Dua-duanya nggak ikut ke repo ini.
 
@@ -76,4 +77,4 @@ SvelteKit (adapter-node) · TypeScript · Tiptap · better-sqlite3 · pdfjs-dist
 
 ## Status
 
-✅ M0 (login), M1 (vault & editor), M2 (tabel & dropdown) beres, plus commit Git otomatis. Berikutnya: **M3 — deploy ke VPS**. Lihat [roadmap](docs/roadmap.md).
+✅ M0 (login), M1 (vault & editor), M2 (tabel & dropdown) beres. M3 (Docker + Caddy + backup harian) siap, tinggal dicoba di VPS. Berikutnya: **M4 — pustaka referensi**. Lihat [roadmap](docs/roadmap.md).

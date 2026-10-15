@@ -1,6 +1,7 @@
 import { mkdir } from 'node:fs/promises';
 import { join } from 'node:path';
 import { createAuth } from './auth';
+import { createBackup } from './backup';
 import { config } from './config';
 import { getDb } from './db';
 import { createGit } from './git';
@@ -28,5 +29,6 @@ export async function initApp(): Promise<void> {
 	const { git } = app();
 	await mkdir(join(config().vaultPath, 'docs'), { recursive: true });
 	await git.ensureRepo();
+	createBackup(getDb(), join(config().dataPath, 'backups')).start();
 	process.on('sveltekit:shutdown', () => void git.flush());
 }

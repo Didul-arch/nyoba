@@ -187,18 +187,16 @@ Lihat [`erd.md`](erd.md) buat ERD + penjelasan, dan [`schema.sql`](../src/lib/se
 
 ## Env
 
-| Variabel            | Isi                                                  |
-| ------------------- | ---------------------------------------------------- |
-| `APP_USER`          | username login                                       |
-| `APP_PASSWORD_HASH` | hash argon2id (bukan password asli!)                 |
-| `SESSION_SECRET`    | string acak ≥ 32 karakter                            |
-| `VAULT_PATH`        | path folder vault, default `./vault`                 |
-| `DATA_PATH`         | path folder data, default `./.data`                  |
-| `PROTOCOL_HEADER`   | (VPS) `x-forwarded-proto`, biar adapter tahu HTTPS   |
-| `HOST_HEADER`       | (VPS) `x-forwarded-host`                             |
-| `ADDRESS_HEADER`    | (VPS) `x-forwarded-for`, biar rate limit per IP asli |
+| Variabel            | Isi                                          |
+| ------------------- | -------------------------------------------- |
+| `APP_USER`          | username login                               |
+| `APP_PASSWORD_HASH` | hash argon2id (bukan password asli!)         |
+| `SESSION_SECRET`    | string acak ≥ 32 karakter                    |
+| `VAULT_PATH`        | path folder vault, default `./vault`         |
+| `DATA_PATH`         | path folder data, default `./.data`          |
+| `DOMAIN`            | (Docker) domain buat HTTPS otomatis di Caddy |
 
-Env dibaca lewat `node --env-file` (bukan `$env` Vite), karena Vite ngerusak hash argon2: `$...` di `.env` dianggap variabel. adapter-node v6 udah nggak pakai `ORIGIN`; di belakang Caddy pakai tiga header di atas.
+Env dibaca lewat `node --env-file` (bukan `$env` Vite), karena Vite ngerusak hash argon2: `$...` di `.env` dianggap variabel. adapter-node v6 udah nggak pakai `ORIGIN`; header proxy (`PROTOCOL_HEADER`, `HOST_HEADER`, `ADDRESS_HEADER`, `XFF_DEPTH`) udah dipasang di `Dockerfile`. Hash di `.env` wajib kutip tunggal karena Docker Compose juga ngembangin `$`.
 
 ## Pertanyaan terbuka
 

@@ -13,5 +13,5 @@ rl.question('Password: ', async (password) => {
 		console.error('Minimal 8 karakter ya.');
 		process.exit(1);
 	}
-	process.stdout.write(`APP_PASSWORD_HASH=${await hash(password)}\n`);
+	process.stdout.write(`APP_PASSWORD_HASH='${await hash(password)}'\n`);
 });

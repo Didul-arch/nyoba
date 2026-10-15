@@ -49,12 +49,16 @@ Aturan main: **satu milestone per sesi Claude Code**, jangan lompat sebelum "Sel
 
 ## M3 — Deploy & Git 🚀
 
-- [ ] Dockerfile + `docker-compose.yml` (volume `vault/` & `data/`)
-- [ ] Caddy buat HTTPS
+- [x] Dockerfile + `compose.yaml` (satu volume: `/data/vault` & `/data/db`)
+- [x] Caddy buat HTTPS
 - [x] Commit otomatis (idle 60 dtk / pindah tab)
-- [ ] Backup harian `app.db` → `data/backups/` (simpan 14 hari)
+- [x] Backup harian `app.db` → `/data/db/backups/` (simpan 14 hari)
+- [x] Panduan deploy: [`docs/deploy.md`](deploy.md)
+- [ ] Deploy beneran ke VPS (nunggu VPS & domain)
 
 **Selesai kalau:** app kebuka dari HP, dan tiap sesi edit kecatat sebagai commit.
+
+> Udah diuji di Docker lokal lewat Caddy (`https://localhost`): login, simpan, backup, restart, healthcheck. Tinggal dicoba di VPS beneran.
 
 ## M4 — Pustaka referensi 📚
 

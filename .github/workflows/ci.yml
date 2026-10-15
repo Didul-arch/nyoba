@@ -16,3 +16,4 @@ jobs:
       - run: npx npm@11 ci
       - run: npm run verify
       - run: npm run build
+      - run: docker build -t nyoba .

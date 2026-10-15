@@ -1,0 +1,33 @@
+# Jalanin di VPS: docker compose up -d --build
+# Butuh .env (lihat .env.example), termasuk DOMAIN.
+services:
+  app:
+    build: .
+    restart: unless-stopped
+    init: true
+    env_file: .env
+    environment:
+      VAULT_PATH: /data/vault
+      DATA_PATH: /data/db
+    volumes:
+      - nyoba-data:/data
+
+  caddy:
+    image: caddy:2.10.2-alpine
+    restart: unless-stopped
+    depends_on: [app]
+    ports:
+      - '80:80'
+      - '443:443'
+      - '443:443/udp'
+    environment:
+      DOMAIN: ${DOMAIN:?Isi DOMAIN di .env, misal nyoba.domainmu.com}
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - caddy-data:/data
+      - caddy-config:/config
+
+volumes:
+  nyoba-data:
+  caddy-data:
+  caddy-config:
