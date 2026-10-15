@@ -1,9 +1,11 @@
 <script lang="ts">
+	import { onMount } from 'svelte';
 	import { goto, invalidate } from '$app/navigation';
 	import { resolve } from '$app/paths';
 	import { page } from '$app/state';
 	import { api } from '#lib/api.ts';
 	import { toggleTheme } from '#lib/theme.ts';
+	import type { SyncStatus } from '#lib/types.ts';
 	import type { LayoutProps } from './$types';
 
 	let { data, children }: LayoutProps = $props();
@@ -12,6 +14,18 @@
 	let creating = $state(false);
 	let newTitle = $state('');
 	let error = $state('');
+	let sync = $state<SyncStatus>();
+
+	onMount(() => {
+		const refresh = () =>
+			fetch('/api/sync')
+				.then((r) => (r.ok ? r.json() : undefined))
+				.then((s: SyncStatus | undefined) => (sync = s ?? sync))
+				.catch(() => {});
+		void refresh();
+		const id = setInterval(refresh, 30_000);
+		return () => clearInterval(id);
+	});
 
 	const activeDoc = $derived(page.params.doc);
 	const activeTab = $derived(page.params.tab);
@@ -108,6 +122,17 @@
 				<p class="empty">Belum ada dokumen. Klik <b>+</b> buat mulai.</p>
 			{/each}
 		</nav>
+
+		{#if sync}
+			<p
+				class="sync"
+				class:bad={!sync.ok}
+				title={sync.at ? `Terakhir: ${new Date(sync.at).toLocaleString('id')}` : ''}
+			>
+				{sync.ok ? (sync.remote ? '☁' : '💻') : '⚠'}
+				{sync.message}
+			</p>
+		{/if}
 
 		<div class="foot">
 			<button type="button" class="icon-btn" title="Ganti tema" onclick={toggleTheme}>◐ Tema</button
@@ -221,6 +246,15 @@
 		color: var(--muted);
 	}
 	.error {
+		color: var(--danger);
+	}
+	.sync {
+		margin: 0 0 8px;
+		padding: 0 8px;
+		font-size: 0.8rem;
+		color: var(--muted);
+	}
+	.sync.bad {
 		color: var(--danger);
 	}
 	.foot {

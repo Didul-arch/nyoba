@@ -6,6 +6,8 @@ export interface Config {
 	sessionSecret: string;
 	vaultPath: string;
 	dataPath: string;
+	/** URL repo Git (privat!) buat cadangan vault. Kosong = vault cuma di lokal. */
+	vaultRemote?: string;
 }
 
 let cached: Config | undefined;
@@ -35,7 +37,8 @@ export function config(): Config {
 		passwordHash,
 		sessionSecret,
 		vaultPath: resolve(process.env.VAULT_PATH || './vault'),
-		dataPath: resolve(process.env.DATA_PATH || './.data')
+		dataPath: resolve(process.env.DATA_PATH || './.data'),
+		vaultRemote: process.env.VAULT_REMOTE?.trim() || undefined
 	};
 	return cached;
 }

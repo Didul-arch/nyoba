@@ -54,9 +54,10 @@ Aturan main: **satu milestone per sesi Claude Code**, jangan lompat sebelum "Sel
 - [x] Commit otomatis (idle 60 dtk / pindah tab)
 - [x] Backup harian `app.db` → `/data/db/backups/` (simpan 14 hari)
 - [x] Panduan deploy: [`docs/deploy.md`](deploy.md)
-- [ ] Deploy beneran ke VPS (nunggu VPS & domain)
+- [x] Sinkron vault ke repo GitHub privat (`VAULT_REMOTE`): tarik pas nyala, push tiap commit
+- [ ] ~~Deploy ke VPS~~ ditunda: dipakai lokal dulu (Vercel nggak bisa, butuh disk permanen)
 
-**Selesai kalau:** app kebuka dari HP, dan tiap sesi edit kecatat sebagai commit.
+**Selesai kalau:** ~~app kebuka dari HP~~ (ditunda), tiap sesi edit kecatat sebagai commit dan ikut ke-push ke GitHub.
 
 > Udah diuji di Docker lokal lewat Caddy (`https://localhost`): login, simpan, backup, restart, healthcheck. Tinggal dicoba di VPS beneran.
 
@@ -65,7 +66,7 @@ Aturan main: **satu milestone per sesi Claude Code**, jangan lompat sebelum "Sel
 - [ ] Tabel referensi + form tambah/edit (termasuk penulis berurutan)
 - [ ] Upload PDF + cek sha256
 - [ ] Penampil PDF.js di panel kanan
-- [ ] Ekspor `references.json` tiap ada perubahan
+- [ ] Ekspor `references.json` tiap ada perubahan (ikut ke-push bareng vault)
 
 **Selesai kalau:** referensi + PDF bisa ditambah, PDF kebuka di halaman mana aja.
 
@@ -75,6 +76,7 @@ Aturan main: **satu milestone per sesi Claude Code**, jangan lompat sebelum "Sel
 - [ ] Sisip `[@kunci, hlm. X]` + simpan ke `citations`
 - [ ] Chip sitasi → buka PDF
 - [ ] Cocok ulang + status `lepas` + panel peringatan
+- [ ] Ekspor posisi sitasi ke `vault/.nyoba/citations.json` (biar ikut ke-push)
 
 **Selesai kalau:** sitasi tetap nempel setelah paragraf di sekitarnya diedit, selama teks yang diblok masih ada.
 

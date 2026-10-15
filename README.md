@@ -40,9 +40,20 @@ npm run dev             # buka http://localhost:5173
 
 Isi `SESSION_SECRET` pakai string acak, misal `openssl rand -base64 48`.
 
-> Di laptop pakai `npm run dev`. Buat dipakai dari HP, deploy ke VPS: `docker compose up -d --build` — langkah lengkapnya di [`docs/deploy.md`](docs/deploy.md).
+> Di laptop pakai `npm run dev`. (Opsional, nanti: kalau mau dibuka dari HP, bisa deploy ke VPS pakai Docker — [`docs/deploy.md`](docs/deploy.md). Vercel nggak bisa: butuh disk permanen.)
 
-Semua tulisanmu ada di `vault/` (file `.md` biasa + repo Git); database kecil di `.data/app.db`. Dua-duanya nggak ikut ke repo ini.
+Semua tulisanmu ada di `vault/` (file `.md` biasa + repo Git); database kecil di `.data/app.db`. Dua-duanya nggak ikut ke repo kode ini.
+
+### Cadangan otomatis ke GitHub ☁
+
+Biar vault (tulisan, nanti juga PDF & data referensi) aman dan bisa dibawa ke laptop lain:
+
+1. Bikin repo **privat** kosong di GitHub, misal `nyoba-vault` (jangan centang "Add README").
+2. Pastikan laptop bisa akses tanpa ditanya password. Tes: `git ls-remote git@github.com:USERNAMEMU/nyoba-vault.git` harus jalan tanpa prompt (pakai SSH key, atau `https://...` kalau udah login lewat Git Credential Manager / `gh auth login`).
+3. Tambahin ke `.env`: `VAULT_REMOTE=git@github.com:USERNAMEMU/nyoba-vault.git`
+4. Restart `npm run dev`. Sidebar bawah nunjukin **☁ Tersinkron ke GitHub**; kalau ⚠, arahin kursor buat lihat pesannya.
+
+Tiap auto-commit langsung di-push. Pas app nyala, perubahan dari GitHub ditarik dulu (cuma kalau aman/fast-forward, nggak pernah nimpa). Pindah laptop: clone kode, isi `.env` yang sama, `npm run dev` — vault ketarik sendiri.
 
 ## Cara pakai
 

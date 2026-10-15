@@ -9,6 +9,14 @@ export interface DocInfo {
 	tabs: TabInfo[];
 }
 
+/** Status sinkron vault ke GitHub, buat indikator di sidebar. */
+export interface SyncStatus {
+	remote: boolean;
+	ok: boolean;
+	message: string;
+	at?: string;
+}
+
 export type Enums = Record<string, string[]>;
 
 export interface TabContent {

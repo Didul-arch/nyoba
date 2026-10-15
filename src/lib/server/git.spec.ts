@@ -1,5 +1,5 @@
 import { execFileSync } from 'node:child_process';
-import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from 'node:fs';
+import { mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
@@ -48,5 +48,57 @@ describe('git', () => {
 		});
 		expect(parentStatus).toContain('?? punya-induk.txt');
 		expect(() => execFileSync('git', ['log'], { cwd: parent, stdio: 'pipe' })).toThrow();
+	});
+
+	describe('sinkron ke remote (GitHub)', () => {
+		const tmp = (name: string) => mkdtempSync(join(tmpdir(), `nyoba-${name}-`));
+
+		it('laptop A push, laptop B yang masih kosong ikut dapet pas nyala', async () => {
+			const remote = tmp('remote');
+			execFileSync('git', ['init', '-q', '--bare', '-b', 'main', remote]);
+
+			const a = tmp('a');
+			const gitA = createGit(a, remote);
+			await gitA.ensureRepo();
+			mkdirSync(join(a, 'docs'));
+			writeFileSync(join(a, 'docs/bab-1.md'), '# Bab 1\n');
+			gitA.schedule('docs/bab-1.md');
+			await gitA.flush();
+			expect(gitA.status()).toMatchObject({ remote: true, ok: true });
+			expect(log(remote)).toBe('bab-1|nyoba');
+
+			const b = tmp('b');
+			const gitB = createGit(b, remote);
+			await gitB.ensureRepo();
+			expect(readFileSync(join(b, 'docs/bab-1.md'), 'utf8')).toBe('# Bab 1\n');
+			expect(gitB.status().ok).toBe(true);
+
+			writeFileSync(join(b, 'docs/bab-1.md'), '# Bab 1\n\nDari laptop B.\n');
+			gitB.schedule('docs/bab-1.md');
+			await gitB.flush();
+			expect(log(remote).split('\n')).toHaveLength(2);
+		});
+
+		it('remote nggak bisa diakses: status ⚠, commit lokal tetap jalan, nggak macet', async () => {
+			const root = tmp('lokal');
+			const git = createGit(root, join(tmpdir(), 'nggak-ada-repo-ini'));
+			await git.ensureRepo();
+			expect(git.status()).toMatchObject({ remote: true, ok: false });
+			expect(git.status().message).toMatch(/^Gagal narik dari GitHub/);
+
+			writeFileSync(join(root, 'a.md'), 'a');
+			git.schedule('docs/a.md');
+			await git.flush();
+			expect(log(root)).toBe('a|nyoba');
+			expect(git.status().message).toMatch(/^Gagal push/);
+		});
+
+		it('tanpa remote: statusnya lokal aja', () => {
+			expect(createGit(tmp('x')).status()).toEqual({
+				remote: false,
+				ok: true,
+				message: 'Cuma di laptop ini'
+			});
+		});
 	});
 });

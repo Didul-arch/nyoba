@@ -135,6 +135,6 @@ erDiagram
 | File PDF               | ✅ ada di vault; `ref_files` bisa di-scan ulang |
 | Indeks cari            | ✅ bangun ulang                                 |
 | Sesi & percobaan login | 🤷 login ulang aja                              |
-| **Posisi sitasi**      | ⚠️ cuma dari `data/backups/` harian             |
+| Posisi sitasi          | ✅ dari `.nyoba/citations.json` di Git (M5)     |
 
-Pelajaran: backup harian `app.db` itu **wajib**, bukan opsional. (v2: pertimbangkan ekspor `citations` ke `vault/.nyoba/citations.json` biar ikut Git juga.)
+Jadi `app.db` boleh hilang: semua yang penting diekspor ke vault dan ikut ke-push ke GitHub. Backup harian `app.db` tetap jalan sebagai jaring pengaman tambahan.

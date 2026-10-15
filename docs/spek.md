@@ -49,12 +49,12 @@ Legenda: 🟢 mudah · 🟡 sedang · 🔴 sulit
 | Klik sitasi → PDF di halaman tepat | 🟢     | PDF.js                                                                           |
 | "Dipakai di subbab" otomatis       | 🟢     | query dari tabel `citations`                                                     |
 | Pencarian teks penuh               | 🟢     | FTS5                                                                             |
+| Sinkron vault ke GitHub            | 🟢     | push tiap commit ke repo **privat**, tarik pas app nyala (`VAULT_REMOTE`)        |
 
 ### v2 (habis MVP kepake)
 
 | Fitur                       | Susah? | Catatan                                                |
 | --------------------------- | ------ | ------------------------------------------------------ |
-| Backup vault ke GitHub      | 🟢     | push berkala ke repo privat                            |
 | Sorot kalimat persis di PDF | 🔴     | best-effort via text layer; gagal di PDF scan          |
 | Ekspor CSL-JSON & BibTeX    | 🟢     | buat Zotero / Word                                     |
 | Salin untuk skripsi         | 🟢     | citeproc-js + CSL → `(Lazuardi 2024)` + daftar pustaka |
@@ -137,6 +137,20 @@ Autosave tiap beberapa detik + commit tiap simpan = ribuan commit sampah. Jadi:
 - **Commit Git:** setelah 60 detik idle, pas pindah tab/dokumen, atau pas tutup halaman. Satu commit bisa berisi beberapa file.
 - **Pesan commit:** `edit: kolokium/01-bab-1` atau `ref: tambah lazuardi2024`.
 - **Penulis commit:** `nyoba <nyoba@localhost>`.
+
+## Apa yang ikut ke GitHub
+
+Prinsipnya: **semua yang penting ada di vault**, jadi cukup vault yang di-push.
+
+| Data             | Di mana                                                     | Ikut push?                                                   |
+| ---------------- | ----------------------------------------------------------- | ------------------------------------------------------------ |
+| Naskah & tracker | `vault/docs/**/*.md`                                        | ✅                                                           |
+| PDF referensi    | `vault/references/*.pdf` (M4)                               | ✅                                                           |
+| Daftar referensi | `vault/references.json`, ekspor otomatis dari DB (M4)       | ✅                                                           |
+| Posisi sitasi    | `vault/.nyoba/citations.json`, ekspor otomatis dari DB (M5) | ✅                                                           |
+| `app.db`         | `.data/`                                                    | ❌ isinya sesi login + cache; bisa dibangun ulang dari vault |
+
+`app.db` sengaja nggak di-push: file biner di Git bikin repo cepat bengkak dan gampang konflik.
 
 ## Model data
 

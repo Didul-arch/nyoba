@@ -9,7 +9,7 @@ import { createVault } from './vault';
 
 function build() {
 	const cfg = config();
-	const git = createGit(cfg.vaultPath);
+	const git = createGit(cfg.vaultPath, cfg.vaultRemote);
 	return {
 		git,
 		vault: createVault(cfg.vaultPath, (label) => git.schedule(label)),
