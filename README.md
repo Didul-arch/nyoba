@@ -41,9 +41,11 @@ npm run dev
 Perintah lain:
 
 ```sh
+npm run verify  # semua cek sekaligus (wajib hijau sebelum commit)
+npm run lint    # prettier + eslint, warning dihitung error
 npm run check   # typecheck svelte + ts
-npm run lint    # prettier + eslint
-npm test        # vitest (nanti ada tes round-trip markdown di sini)
+npm run knip    # cari dependency / file / export yang nganggur
+npm test        # vitest
 npm run build   # build buat adapter-node
 ```
 

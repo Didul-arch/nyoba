@@ -7,6 +7,7 @@ Aturan main: **satu milestone per sesi Claude Code**, jangan lompat sebelum "Sel
 - [x] SvelteKit + adapter-node + TypeScript
 - [x] Prettier, ESLint, Vitest
 - [x] Spek dikurasi, ERD, skema SQL, roadmap
+- [x] Standar kode: ESLint ketat, knip, tes skema, CI GitHub Actions
 
 ## M0 — Kerangka & login 🔐
 
