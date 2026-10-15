@@ -36,6 +36,16 @@ npm run build
 
 Semua harus hijau. CI (`.github/workflows/ci.yml`) ngejalanin hal yang sama.
 
+## Jebakan SvelteKit 3 (udah pernah kena)
+
+- `$lib` udah nggak ada. Pakai `#lib/...` **dengan ekstensi**: `import { api } from '#lib/api.ts'`.
+- Tipe hook (`Handle`, `ServerInit`) dari `@sveltejs/kit/hooks`.
+- `href` / `goto` wajib lewat `resolve()` dari `$app/paths`, pakai ID route lengkap termasuk grup: `resolve('/(app)/d/[doc]/[tab]', { doc, tab })`.
+- Env server dibaca dari `process.env` (`src/lib/server/config.ts`), diisi `node --env-file`. Jangan pakai `$env/*`: Vite ngerusak `$` di hash argon2.
+- adapter-node v6 nggak baca `ORIGIN`; build produksi di HTTP polos bakal kena 403 CSRF. Lokal pakai `npm run dev`.
+- `$effect` yang manggil `editor.view.dispatch` harus dibungkus `untrack()`, kalau nggak: loop `effect_update_depth_exceeded`.
+- Input rule Tiptap buat node chip: pakai `InputRule` sendiri yang ganti seluruh match; `nodeInputRule` ninggalin kurung.
+
 ## Bahasa
 
 Dokumen, UI, pesan error ke user, dan nama tes: Indonesia santai. Nama variabel/fungsi: Inggris.

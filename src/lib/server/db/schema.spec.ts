@@ -1,23 +1,20 @@
-import { readFileSync } from 'node:fs';
-import { DatabaseSync } from 'node:sqlite';
 import { beforeEach, describe, expect, it } from 'vitest';
+import { openDb, type Db } from './index';
 
-const schema = readFileSync(new URL('./schema.sql', import.meta.url), 'utf8');
 const now = '2026-10-15T00:00:00Z';
 
 describe('schema.sql', () => {
-	let db: DatabaseSync;
+	let db: Db;
 
 	beforeEach(() => {
-		db = new DatabaseSync(':memory:');
-		db.exec(schema);
+		db = openDb(':memory:');
 		db.prepare(
 			"INSERT INTO refs (key, type, title, created_at, updated_at) VALUES ('lazuardi2024', 'jurnal', 'Judul', ?, ?)"
 		).run(now, now);
 	});
 
-	it('naikkan user_version ke 1', () => {
-		expect(db.prepare('PRAGMA user_version').get()).toEqual({ user_version: 1 });
+	it('migrasi jalan sekali dan naikkan user_version ke 1', () => {
+		expect(db.pragma('user_version', { simple: true })).toBe(1);
 	});
 
 	it('tolak kunci referensi yang nggak sesuai aturan', () => {

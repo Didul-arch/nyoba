@@ -4,7 +4,7 @@
 	"version": "0.0.1",
 	"type": "module",
 	"scripts": {
-		"dev": "vite dev",
+		"dev": "node --env-file-if-exists=.env node_modules/vite/bin/vite.js dev",
 		"build": "vite build",
 		"preview": "vite preview",
 		"prepare": "svelte-kit sync || echo ''",
@@ -15,13 +15,16 @@
 		"test:unit": "vitest",
 		"test": "npm run test:unit -- --run",
 		"knip": "knip",
-		"verify": "npm run lint && npm run check && npm run knip && npm test"
+		"verify": "npm run lint && npm run check && npm run knip && npm test",
+		"start": "node --env-file-if-exists=.env build",
+		"hash-password": "node scripts/hash-password.js"
 	},
 	"devDependencies": {
 		"@eslint/js": "^10.0.1",
 		"@sveltejs/adapter-node": "^6.0.0",
 		"@sveltejs/kit": "^3.0.0",
 		"@sveltejs/vite-plugin-svelte": "^7.2.0",
+		"@types/better-sqlite3": "9.6.0",
 		"@types/node": "^22",
 		"eslint": "^10.4.1",
 		"eslint-config-prettier": "^10.1.8",
@@ -42,5 +45,20 @@
 	},
 	"engines": {
 		"node": ">=22.13"
+	},
+	"dependencies": {
+		"@node-rs/argon2": "2.2.2",
+		"@tiptap/core": "3.31.4",
+		"@tiptap/extension-list": "3.31.4",
+		"@tiptap/extension-table": "3.31.4",
+		"@tiptap/extensions": "3.31.4",
+		"@tiptap/markdown": "3.31.4",
+		"@tiptap/pm": "3.31.4",
+		"@tiptap/starter-kit": "3.31.4",
+		"better-sqlite3": "13.0.3",
+		"yaml": "2.9.1"
+	},
+	"allowScripts": {
+		"better-sqlite3": false
 	}
 }

@@ -28,24 +28,45 @@ Naskah final tetap di Word (ya gimana, kampus). nyoba cuma tempat mikir & nulis 
 
 ## Jalanin
 
-Butuh Node 22+.
+Butuh Node 22.13+ dan `git`.
 
 ```sh
-cp .env.example .env    # isi kredensialnya
-npm install
-npm run dev
+cp .env.example .env    # lalu isi (lihat di bawah)
+npx npm@11 install      # npm 10 kena bug `edgesOut`
+npm run hash-password   # ketik password → salin hasilnya ke APP_PASSWORD_HASH
+npm run dev             # buka http://localhost:5173
 ```
 
-> ⚠️ Kalau `npm install` error `Cannot read properties of null (reading 'edgesOut')`, itu bug npm 10. Pakai `npx npm@11 install`.
+Isi `SESSION_SECRET` pakai string acak, misal `openssl rand -base64 48`.
 
-Perintah lain:
+> Di laptop pakai `npm run dev`. Build produksi (`npm run build && npm start`) dimaksudkan jalan di belakang Caddy (HTTPS) — lihat M3 di roadmap.
+
+Semua tulisanmu ada di `vault/` (file `.md` biasa + repo Git); database kecil di `.data/app.db`. Dua-duanya nggak ikut ke repo ini.
+
+## Cara pakai
+
+| Mau apa                         | Caranya                                                                                                         |
+| ------------------------------- | --------------------------------------------------------------------------------------------------------------- |
+| Dokumen baru                    | `+` di sebelah **Dokumen** di sidebar                                                                           |
+| Tab baru                        | `+` di ujung bar tab (bisa di-drag buat ganti urutan)                                                           |
+| Sisip judul / tabel / checklist | ketik `/` di baris kosong                                                                                       |
+| Tebal, miring, tautan           | blok teks → menu kecil muncul (atau `Ctrl+B`, `Ctrl+I`)                                                         |
+| Markdown langsung               | `# `, `## `, `- `, `1. `, `[ ] `, `> `, ` ``` ` di awal baris                                                   |
+| Dropdown status di tabel        | `⋯` → **Tampilkan properti**, tulis `enums: { Status: [Draf, Revisi, ACC] }`, lalu klik sel di kolom **Status** |
+| Tautan ke tab lain              | ketik `[[Judul Tab]]` atau `[[dokumen/tab]]`                                                                    |
+| Sitasi                          | ketik `[@kunci, hlm. 24]` → jadi chip                                                                           |
+| Simpan                          | otomatis (~1 dtk). `Ctrl+S` kalau nggak sabar                                                                   |
+| Buka tautan biasa               | `Ctrl`/`Cmd` + klik                                                                                             |
+| Riwayat                         | `cd vault && git log` — tiap sesi edit jadi commit                                                              |
+
+## Perintah dev
 
 ```sh
 npm run verify  # semua cek sekaligus (wajib hijau sebelum commit)
 npm run lint    # prettier + eslint, warning dihitung error
 npm run check   # typecheck svelte + ts
 npm run knip    # cari dependency / file / export yang nganggur
-npm test        # vitest
+npm test        # vitest (round-trip markdown, auth, vault, git)
 npm run build   # build buat adapter-node
 ```
 
@@ -55,4 +76,4 @@ SvelteKit (adapter-node) · TypeScript · Tiptap · better-sqlite3 · pdfjs-dist
 
 ## Status
 
-🚧 Baru selesai **init**. Lagi otw **M0 — kerangka & login**. Lihat [roadmap](docs/roadmap.md).
+✅ M0 (login), M1 (vault & editor), M2 (tabel & dropdown) beres, plus commit Git otomatis. Berikutnya: **M3 — deploy ke VPS**. Lihat [roadmap](docs/roadmap.md).

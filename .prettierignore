@@ -7,3 +7,6 @@ bun.lockb
 
 # Miscellaneous
 /static/
+
+# Contoh round-trip harus persis apa adanya
+/tests/fixtures/

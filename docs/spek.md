@@ -187,14 +187,18 @@ Lihat [`erd.md`](erd.md) buat ERD + penjelasan, dan [`schema.sql`](../src/lib/se
 
 ## Env
 
-| Variabel            | Isi                                                   |
-| ------------------- | ----------------------------------------------------- |
-| `APP_USER`          | username login                                        |
-| `APP_PASSWORD_HASH` | hash argon2id (bukan password asli!)                  |
-| `SESSION_SECRET`    | string acak ≥ 32 karakter                             |
-| `VAULT_PATH`        | path folder vault, default `./vault`                  |
-| `DATA_PATH`         | path folder data, default `./.data`                   |
-| `ORIGIN`            | URL publik, wajib buat adapter-node di belakang proxy |
+| Variabel            | Isi                                                  |
+| ------------------- | ---------------------------------------------------- |
+| `APP_USER`          | username login                                       |
+| `APP_PASSWORD_HASH` | hash argon2id (bukan password asli!)                 |
+| `SESSION_SECRET`    | string acak ≥ 32 karakter                            |
+| `VAULT_PATH`        | path folder vault, default `./vault`                 |
+| `DATA_PATH`         | path folder data, default `./.data`                  |
+| `PROTOCOL_HEADER`   | (VPS) `x-forwarded-proto`, biar adapter tahu HTTPS   |
+| `HOST_HEADER`       | (VPS) `x-forwarded-host`                             |
+| `ADDRESS_HEADER`    | (VPS) `x-forwarded-for`, biar rate limit per IP asli |
+
+Env dibaca lewat `node --env-file` (bukan `$env` Vite), karena Vite ngerusak hash argon2: `$...` di `.env` dianggap variabel. adapter-node v6 udah nggak pakai `ORIGIN`; di belakang Caddy pakai tiga header di atas.
 
 ## Pertanyaan terbuka
 
@@ -215,6 +219,6 @@ Lihat [`erd.md`](erd.md) buat ERD + penjelasan, dan [`schema.sql`](../src/lib/se
 | Kolom enum di SQLite  | teks bebas                       | `CHECK (...)`                                                   | data ngaco ketahuan di DB, bukan pas ekspor                                                                                 |
 | FTS5                  | `doc_path` diindeks              | `doc_path UNINDEXED`, tokenizer `unicode61 remove_diacritics 2` | nggak perlu cari di path; aksen diabaikan                                                                                   |
 | `_doc.md`             | "metadata + urutan tab"          | format frontmatter didefinisikan                                | biar M1 nggak nebak                                                                                                         |
-| Env                   | 3 variabel                       | + `VAULT_PATH`, `DATA_PATH`, `ORIGIN`                           | spek M0 nyebut path vault dari env; `ORIGIN` wajib di adapter-node                                                          |
+| Env                   | 3 variabel                       | + `VAULT_PATH`, `DATA_PATH`, header proxy                       | spek M0 nyebut path vault dari env; adapter-node v6 butuh header proxy di belakang Caddy                                    |
 | Cell enum nggak valid | nggak dibahas                    | chip abu-abu + ⚠️                                               | jangan pernah ngubah isi file diam-diam                                                                                     |
 | Ganti kunci referensi | nggak dibahas                    | dikunci setelah dipakai                                         | cegah sitasi yatim                                                                                                          |
